@@ -11,7 +11,7 @@ Default header name `X-API-Key`.
     {
         public override string GetUserName(string apiKey)
         {
-            //Add you key - consuming app mapping logic
+            //Add your key - consuming app mapping logic
         }
     }
     app.UseRouting();
@@ -60,7 +60,7 @@ public void ConfigureServices(IServiceCollection services)
 // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 {
-    //ommited for briefity
+    //omitted for brevity
     app.UseRouting();
 
     app.UseApiKeyAuthMiddleware();
@@ -68,6 +68,6 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     app.UseAuthentication();
     app.UseAuthorization();
 
-    //ommited for briefity
+    //omitted for brevity
 }
 ```

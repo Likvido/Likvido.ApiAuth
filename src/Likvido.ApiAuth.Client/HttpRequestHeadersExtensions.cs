@@ -36,7 +36,7 @@ namespace Likvido.ApiAuth.Client
             string headerName = AuthConstants.UserInfoHeader)
         {
             requestHeaders.Remove(headerName);
-            requestHeaders.Add(headerName, UserInfoHeaderSerializer.Serialize( claims));
+            requestHeaders.Add(headerName, UserInfoHeaderSerializer.Serialize(claims));
             return requestHeaders;
         }
 

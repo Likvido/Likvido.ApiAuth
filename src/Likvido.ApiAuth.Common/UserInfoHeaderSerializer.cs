@@ -57,7 +57,7 @@ namespace Likvido.ApiAuth.Common
             return new ClaimsIdentity(claims, authType);
         }
 
-        public static string  Serialize(string userId, IEnumerable<Claim> claims, TokenClaims tokenClaims = null)
+        public static string Serialize(string userId, IEnumerable<Claim> claims, TokenClaims tokenClaims = null)
         {
             if (string.IsNullOrWhiteSpace(userId))
             {
@@ -94,7 +94,7 @@ namespace Likvido.ApiAuth.Common
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(userInfo, SerializerOptions)));
         }
 
-        public static string  Serialize(IEnumerable<Claim> claims, TokenClaims tokenClaims = null)
+        public static string Serialize(IEnumerable<Claim> claims, TokenClaims tokenClaims = null)
         {
             var idClaim = claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
             if (string.IsNullOrWhiteSpace(idClaim?.Value))
