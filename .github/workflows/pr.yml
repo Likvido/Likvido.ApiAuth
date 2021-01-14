@@ -1,0 +1,40 @@
+name: PR
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - src/**
+      - .github/workflows/pr.yml
+
+env:
+  FRAMEWORK: netcoreapp3.1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set tests path
+        run: echo "TEST_RESULTS_PATH=${{ github.workspace }}/TestResults/" >> $GITHUB_ENV
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x'
+      - name: Run tests
+        run: |
+          PROJECTS=(
+            './Likvido.ApiAuth.Tests/Likvido.ApiAuth.Tests.csproj')
+          printf "%s\n" "${PROJECTS[@]}" | xargs -n1 -I file /bin/bash -c 'dotnet restore file'
+          printf "%s\n" "${PROJECTS[@]}" | xargs -n1 -I file /bin/bash -c 'dotnet build file --framework ${{ env.FRAMEWORK }} --no-restore --configuration release'
+          paste <(printf "%s\n" "${!PROJECTS[@]}") <(printf "%s\n" "${PROJECTS[@]}") | xargs -n2 /bin/bash -c 'dotnet test $1 --framework --framework ${{ env.FRAMEWORK }} --no-build --no-restore --configuration release --logger:"nunit;LogFilePath=${{ env.TEST_RESULTS_PATH }}$0.xml"'
+        working-directory: ./src
+      - name: Publish Unit Test Results
+        uses: Boychenko/nunit-reporter@build
+        if: always()
+        with:
+          path: ${{ env.TEST_RESULTS_PATH }}*.xml
+          access-token: ${{ secrets.GITHUB_TOKEN }}
+          reportTitle: PR Test Report

@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Likvido.ApiAuth.Common", "Likvido.ApiAuth.Common\Likvido.ApiAuth.Common.csproj", "{DC515D14-0F28-4BAD-AEFE-593E875D4640}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Likvido.ApiAuth.Client", "Likvido.ApiAuth.Client\Likvido.ApiAuth.Client.csproj", "{16B4E57D-D892-4ECA-868D-1C207AE06501}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Likvido.ApiAuth.Server", "Likvido.ApiAuth.Server\Likvido.ApiAuth.Server.csproj", "{84CBA399-86CC-4C74-B2A1-349A63A146CA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Likvido.ApiAuth.Tests", "Likvido.ApiAuth.Tests\Likvido.ApiAuth.Tests.csproj", "{9512A2AF-DABA-40BE-B9DF-AEBAD9BB3C3E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{324A1F88-BA66-4861-B002-808E6D1F2B61}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		version.props = version.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{2707FE4D-80A5-455E-8E53-61F2F2458A60}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\nuget.yml = ..\.github\workflows\nuget.yml
+		..\.github\workflows\pr.yml = ..\.github\workflows\pr.yml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DC515D14-0F28-4BAD-AEFE-593E875D4640}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC515D14-0F28-4BAD-AEFE-593E875D4640}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC515D14-0F28-4BAD-AEFE-593E875D4640}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC515D14-0F28-4BAD-AEFE-593E875D4640}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16B4E57D-D892-4ECA-868D-1C207AE06501}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16B4E57D-D892-4ECA-868D-1C207AE06501}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16B4E57D-D892-4ECA-868D-1C207AE06501}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16B4E57D-D892-4ECA-868D-1C207AE06501}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84CBA399-86CC-4C74-B2A1-349A63A146CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84CBA399-86CC-4C74-B2A1-349A63A146CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84CBA399-86CC-4C74-B2A1-349A63A146CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84CBA399-86CC-4C74-B2A1-349A63A146CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9512A2AF-DABA-40BE-B9DF-AEBAD9BB3C3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9512A2AF-DABA-40BE-B9DF-AEBAD9BB3C3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9512A2AF-DABA-40BE-B9DF-AEBAD9BB3C3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9512A2AF-DABA-40BE-B9DF-AEBAD9BB3C3E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2707FE4D-80A5-455E-8E53-61F2F2458A60} = {324A1F88-BA66-4861-B002-808E6D1F2B61}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F3DB7B6E-382D-46EA-8C5C-24B28CE19C9F}
+	EndGlobalSection
+EndGlobal
