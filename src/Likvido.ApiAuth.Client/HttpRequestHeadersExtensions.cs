@@ -32,7 +32,7 @@ namespace Likvido.ApiAuth.Client
 
         public static HttpRequestHeaders SetUserInfoHeader(
             this HttpRequestHeaders requestHeaders,
-            IEnumerable<Claim> claims,
+            IReadOnlyCollection<Claim> claims,
             string headerName = AuthConstants.UserInfoHeader)
         {
             requestHeaders.Remove(headerName);
@@ -42,7 +42,7 @@ namespace Likvido.ApiAuth.Client
 
         public static HttpRequestHeaders SetUserInfoHeader(
             this HttpRequestHeaders requestHeaders,
-            IEnumerable<Claim> claims,
+            IReadOnlyCollection<Claim> claims,
             TokenClaims tokenClaims,
             string headerName = AuthConstants.UserInfoHeader)
         {

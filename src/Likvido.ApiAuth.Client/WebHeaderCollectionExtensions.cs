@@ -30,7 +30,7 @@ namespace Likvido.ApiAuth.Client
 
         public static WebHeaderCollection SetUserInfoHeader(
             this WebHeaderCollection headerCollection,
-            IEnumerable<Claim> claims,
+            IReadOnlyCollection<Claim> claims,
             string headerName = AuthConstants.UserInfoHeader)
         {
             headerCollection.Set(headerName, UserInfoHeaderSerializer.Serialize(claims));
@@ -39,7 +39,7 @@ namespace Likvido.ApiAuth.Client
 
         public static WebHeaderCollection SetUserInfoHeader(
             this WebHeaderCollection headerCollection,
-            IEnumerable<Claim> claims,
+            IReadOnlyCollection<Claim> claims,
             TokenClaims tokenClaims,
             string headerName = AuthConstants.UserInfoHeader)
         {

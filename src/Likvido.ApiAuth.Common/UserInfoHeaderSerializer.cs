@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
+using Likvido.ApiAuth.Common.Exceptions;
 
 namespace Likvido.ApiAuth.Common
 {
@@ -29,29 +30,53 @@ namespace Likvido.ApiAuth.Common
             var rawString = Encoding.UTF8.GetString(Convert.FromBase64String(value));
             var doc = JsonDocument.Parse(rawString, DocumentOptions);
             var claims = new List<Claim>();
-            var jsonUserId = doc.RootElement.GetProperty("userId").GetString();
-            var jsonClaims = doc.RootElement.GetProperty("claims");
-            bool hasId = false;
-            foreach (var claim in jsonClaims.EnumerateObject())
+            if (!doc.RootElement.TryGetProperty("userId", out var userIdElement)) 
             {
-                var claimName = tokenClaims.FromTokenClaimToClaim(claim.Name);
-                hasId = hasId || claimName == ClaimTypes.NameIdentifier;
-                if (claim.Value.ValueKind == JsonValueKind.Array)
+                throw new MissingJsonFieldException("Property \"userId\" doesn't exists");
+            }
+            var userId = userIdElement.GetString();
+            bool hasId = false;
+            if (doc.RootElement.TryGetProperty("claims", out var jsonClaims))
+            {
+                if (jsonClaims.ValueKind != JsonValueKind.Object)
                 {
-                    foreach (var claimElement in claim.Value.EnumerateArray())
-                    {
-                        claims.Add(new Claim(claimName, claimElement.GetString()));
-                    }
+                    throw new InvalidJsonFieldException("Property \"claims\" must be object");
                 }
-                else
+                foreach (var claim in jsonClaims.EnumerateObject())
                 {
-                    claims.Add(new Claim(claimName, claim.Value.GetString()));
+                    var claimName = tokenClaims.FromTokenClaimToClaim(claim.Name);
+                    if (claimName == ClaimTypes.NameIdentifier)
+                    {
+                        hasId = true;
+                        if (claim.Value.ValueKind != JsonValueKind.String)
+                        {
+                            throw new InvalidJsonFieldException($"Claims \"sub\" must be string");
+                        }
+                    }
+                    if (claim.Value.ValueKind == JsonValueKind.Array)
+                    {
+                        foreach (var claimElement in claim.Value.EnumerateArray())
+                        {
+                            claims.Add(new Claim(claimName, claimElement.GetString()));
+                        }
+                    }
+                    else
+                    {
+                        var claimValue = claim.Value.GetString();
+                        if (claimName == ClaimTypes.NameIdentifier
+                            && userId != claimValue)
+                        {
+                            throw new HeaderDataValidationException($"Property \"userId\" must be equal to \"{claim.Name}\"");
+                        }
+
+                        claims.Add(new Claim(claimName, claimValue));
+                    }
                 }
             }
 
             if (!hasId)
             {
-                claims.Add(new Claim(ClaimTypes.NameIdentifier, jsonUserId));
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, userId));
             }
 
             return new ClaimsIdentity(claims, authType);
@@ -61,7 +86,7 @@ namespace Likvido.ApiAuth.Common
         {
             if (string.IsNullOrWhiteSpace(userId))
             {
-                throw new ArgumentException("Value muct be provided", userId);
+                throw new ArgumentException("Value must be provided", userId);
             }
 
             var idClaim = claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
@@ -94,7 +119,7 @@ namespace Likvido.ApiAuth.Common
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(userInfo, SerializerOptions)));
         }
 
-        public static string Serialize(IEnumerable<Claim> claims, TokenClaims tokenClaims = null)
+        public static string Serialize(IReadOnlyCollection<Claim> claims, TokenClaims tokenClaims = null)
         {
             var idClaim = claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
             if (string.IsNullOrWhiteSpace(idClaim?.Value))
@@ -102,27 +127,7 @@ namespace Likvido.ApiAuth.Common
                 throw new ArgumentException($"\"{ClaimTypes.NameIdentifier}\" claim must exist", nameof(claims));
             }
 
-            tokenClaims = tokenClaims ?? TokenClaims.Default;
-            var userInfo = new ApiUserInfo
-            {
-                UserId = idClaim.Value
-            };
-
-            var claimGroups = claims.GroupBy(c => c.Type).ToList();
-            foreach (var claimGroup in claimGroups)
-            {
-                var claimName = tokenClaims.FromClaimToTokenClaim(claimGroup.Key);
-                if (claimGroup.Count() > 1)
-                {
-                    userInfo.Claims.Add(claimName, claimGroup.Select(c => c.Value).ToArray());
-                }
-                else
-                {
-                    userInfo.Claims.Add(claimName, claimGroup.First().Value);
-                }
-            }
-
-            return Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(userInfo, SerializerOptions)));
+            return Serialize(idClaim.Value, claims, tokenClaims);
         }
 
         private class ApiUserInfo

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using Likvido.ApiAuth.Common;
+using Likvido.ApiAuth.Common.Exceptions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Shouldly;
 using Xunit;
@@ -197,6 +199,84 @@ namespace Likvido.ApiAuth.Tests
                 .ShouldBe(claims.Select(c => new { c.Type, c.Value }));
 
             identity.FindFirst(ClaimTypes.NameIdentifier).Value.ShouldBe(userId);
+        }
+
+        [Fact]
+        public void Deserialization_Should_Throw_When_No_User_Id()
+        {
+            var header = JsonConvert.SerializeObject(new
+            {
+                claims = new Dictionary<string, string>
+                {
+                    ["sub"] = Guid.NewGuid().ToString()
+                }
+            });
+
+            header = Convert.ToBase64String(Encoding.UTF8.GetBytes(header));
+            Should.Throw<MissingJsonFieldException>(() => UserInfoHeaderSerializer.Deserialize(header));
+        }
+
+        [Theory]
+        [InlineData("string")]
+        [InlineData(1)]
+        [InlineData(new object[] { new string[] { "foo", "bar" } })]
+        public void Deserialization_Should_Throw_When_Claims_Not_Object(object claims)
+        {
+            var header = JsonConvert.SerializeObject(new
+            {
+                userId = Guid.NewGuid().ToString(),
+                claims = claims
+            });
+
+            header = Convert.ToBase64String(Encoding.UTF8.GetBytes(header));
+            Should.Throw<InvalidJsonFieldException>(() => UserInfoHeaderSerializer.Deserialize(header));
+        }
+
+        [Fact]
+        public void Deserialization_Should_Work_When_No_Claims()
+        {
+            var userId = Guid.NewGuid().ToString();
+            var header = JsonConvert.SerializeObject(new
+            {
+                userId = userId
+            });
+
+            header = Convert.ToBase64String(Encoding.UTF8.GetBytes(header));
+            var principal = UserInfoHeaderSerializer.Deserialize(header);
+            principal.FindFirst(ClaimTypes.NameIdentifier).Value.ShouldBe(userId);
+        }
+
+        [Fact]
+        public void Deserialization_Should_Throw_When_Id_Claim_Not_String()
+        {
+            var userId = Guid.NewGuid().ToString();
+            var header = JsonConvert.SerializeObject(new
+            {
+                userId = userId,
+                claims = new Dictionary<string, object>
+                {
+                    ["sub"] = new [] { userId, userId }
+                }
+            });
+
+            header = Convert.ToBase64String(Encoding.UTF8.GetBytes(header));
+            Should.Throw<InvalidJsonFieldException>(() => UserInfoHeaderSerializer.Deserialize(header));
+        }
+
+        [Fact]
+        public void Deserialization_Should_Throw_When_Id_Clamd_And_User_Id_Not_Match()
+        {
+            var header = JsonConvert.SerializeObject(new
+            {
+                userId = Guid.NewGuid().ToString(),
+                claims = new Dictionary<string, string>
+                {
+                    ["sub"] = Guid.NewGuid().ToString()
+                }
+            });
+
+            header = Convert.ToBase64String(Encoding.UTF8.GetBytes(header));
+            Should.Throw<HeaderDataValidationException>(() => UserInfoHeaderSerializer.Deserialize(header));
         }
 
         [Fact]

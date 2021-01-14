@@ -29,7 +29,7 @@ namespace Likvido.ApiAuth.Server
                     _logger.ApiKeyAuthorizationFailureOccurred(
                         "Invalid Api Key.",
                         new Dictionary<string, object> { ["HeaderName"] = options.HeaderName });
-                    await WriteUnauthorized(context).ConfigureAwait(false);
+                    WriteUnauthorized(context);
                     return;
                 }
 
@@ -49,14 +49,13 @@ namespace Likvido.ApiAuth.Server
                 _logger.ApiKeyAuthorizationFailureOccurred(
                     "Api Key not provided.",
                     new Dictionary<string, object> { ["HeaderName"] = options.HeaderName });
-                await WriteUnauthorized(context).ConfigureAwait(false);
+                WriteUnauthorized(context);
             }
         }
 
-        private static Task WriteUnauthorized(HttpContext context)
+        private static void WriteUnauthorized(HttpContext context)
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            return Task.CompletedTask;
         }
     }
 
