@@ -47,11 +47,17 @@ jobs:
           PACKAGE_NAME: Likvido.ApiAuth.Common
           VERSION_REGEX: <Version>(.*)<\/Version>
           NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
+      - name: Extract version
+        uses: bhowell2/github-substring-action@v1.0.0
+        id: common_version
+        with:
+          value: ${{steps.publish_nuget_common.outputs.VERSION}}
+          index_of_str: "v"
       - name: Wait for common package
         uses: cygnetdigital/wait_for_response@v2.0.0
         with:
-            url: 'https://api.nuget.org/v3/registration5-semver1/likvido.apiauth.common/${{steps.publish_nuget_common.outputs.VERSION}}.json'
-            responseCode: '200'
+            url: "https://api.nuget.org/v3/registration5-semver1/likvido.apiauth.common/${{steps.common_version.outputs.substring}}.json"
+            responseCode: "200"
             timeout: 600000
             interval: 30000
       - name: Publish NuGet Likvido.ApiAuth.Client
