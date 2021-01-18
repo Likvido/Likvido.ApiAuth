@@ -40,12 +40,20 @@ jobs:
           reportTitle: Core API PR Test Report
       - name: Publish NuGet Likvido.ApiAuth.Common
         uses: brandedoutcast/publish-nuget@v2.5.5
+        id: publish_nuget_common
         with:
           PROJECT_FILE_PATH: src/Likvido.ApiAuth.Common/Likvido.ApiAuth.Common.csproj
           VERSION_FILE_PATH: src/version.props
           PACKAGE_NAME: Likvido.ApiAuth.Common
           VERSION_REGEX: <Version>(.*)<\/Version>
           NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
+      - name: Wait for common package
+        uses: cygnetdigital/wait_for_response@v2.0.0
+        with:
+            url: 'https://api.nuget.org/v3/registration5-semver1/likvido.apiauth.common/${{steps.publish_nuget_common.outputs.VERSION}}.json'
+            responseCode: '200'
+            timeout: 600000
+            interval: 30000
       - name: Publish NuGet Likvido.ApiAuth.Client
         uses: brandedoutcast/publish-nuget@v2.5.5
         with:
@@ -54,6 +62,7 @@ jobs:
           PACKAGE_NAME: Likvido.ApiAuth.Client
           VERSION_REGEX: <Version>(.*)<\/Version>
           NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
+          TAG_COMMIT: false
       - name: Publish NuGet Likvido.ApiAuth.Server
         uses: brandedoutcast/publish-nuget@v2.5.5
         with:
@@ -62,3 +71,4 @@ jobs:
           PACKAGE_NAME: Likvido.ApiAuth.Server
           VERSION_REGEX: <Version>(.*)<\/Version>
           NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
+          TAG_COMMIT: false
