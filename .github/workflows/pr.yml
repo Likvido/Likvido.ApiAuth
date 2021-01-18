@@ -28,8 +28,8 @@ jobs:
           PROJECTS=(
             './Likvido.ApiAuth.Tests/Likvido.ApiAuth.Tests.csproj')
           printf "%s\n" "${PROJECTS[@]}" | xargs -n1 -I file /bin/bash -c 'dotnet restore file'
-          printf "%s\n" "${PROJECTS[@]}" | xargs -n1 -I file /bin/bash -c 'dotnet build file --framework ${{ env.FRAMEWORK }} --no-restore --configuration release'
-          paste <(printf "%s\n" "${!PROJECTS[@]}") <(printf "%s\n" "${PROJECTS[@]}") | xargs -n2 /bin/bash -c 'dotnet test $1 --framework --framework ${{ env.FRAMEWORK }} --no-build --no-restore --configuration release --logger:"nunit;LogFilePath=${{ env.TEST_RESULTS_PATH }}$0.xml"'
+          printf "%s\n" "${PROJECTS[@]}" | xargs -n1 -I file /bin/bash -c 'dotnet build file --framework ${{ env.FRAMEWORK }} --no-restore --configuration debug'
+          paste <(printf "%s\n" "${!PROJECTS[@]}") <(printf "%s\n" "${PROJECTS[@]}") | xargs -n2 /bin/bash -c 'dotnet test $1 --framework --framework ${{ env.FRAMEWORK }} --no-build --no-restore --configuration debug --logger:"nunit;LogFilePath=${{ env.TEST_RESULTS_PATH }}$0.xml"'
         working-directory: ./src
       - name: Publish Unit Test Results
         uses: Boychenko/nunit-reporter@build

@@ -1,0 +1,9 @@
+<Project>
+  <ItemGroup Condition="'$(Configuration)'=='Debug'">
+    <ProjectReference Include="..\Likvido.ApiAuth.Common\Likvido.ApiAuth.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)'=='Release'">
+    <PackageReference Include="Likvido.ApiAuth.Common" Version="$(Version)" />
+  </ItemGroup>
+</Project>
