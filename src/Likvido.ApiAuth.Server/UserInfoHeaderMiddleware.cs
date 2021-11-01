@@ -42,7 +42,6 @@ namespace Likvido.ApiAuth.Server
                         ["UserInfo"] = header.ToString(),
                         ["HeaderName"] = _options.HeaderName
                     });
-                    return;
                 }
             }
 

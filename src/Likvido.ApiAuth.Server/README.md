@@ -38,7 +38,7 @@ Doesn't do any auth check but just sets or adds identity passed in user info hea
     app.UseRouting();
 
     app.UseApiKeyAuthMiddleware();
-    app.UserInfoMiddlewareExtensions();
+    app.UseUserInfoMiddleware();
 
     app.UseEndpoints(...)
 ```
