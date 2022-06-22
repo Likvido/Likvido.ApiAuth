@@ -31,10 +31,3 @@ jobs:
           printf "%s\n" "${PROJECTS[@]}" | xargs -n1 -I file /bin/bash -c 'dotnet build file --framework ${{ env.FRAMEWORK }} --no-restore --configuration debug'
           paste <(printf "%s\n" "${!PROJECTS[@]}") <(printf "%s\n" "${PROJECTS[@]}") | xargs -n2 /bin/bash -c 'dotnet test $1 --framework --framework ${{ env.FRAMEWORK }} --no-build --no-restore --configuration debug --logger:"nunit;LogFilePath=${{ env.TEST_RESULTS_PATH }}$0.xml"'
         working-directory: ./src
-      - name: Publish Unit Test Results
-        uses: Boychenko/nunit-reporter@build
-        if: always()
-        with:
-          path: ${{ env.TEST_RESULTS_PATH }}*.xml
-          access-token: ${{ secrets.GITHUB_TOKEN }}
-          reportTitle: PR Test Report
