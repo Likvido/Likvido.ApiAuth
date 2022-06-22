@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Unicode;
 using Likvido.ApiAuth.Common.Exceptions;
 
 namespace Likvido.ApiAuth.Common
@@ -14,7 +16,8 @@ namespace Likvido.ApiAuth.Common
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             MaxDepth = 3,
-            WriteIndented = false
+            WriteIndented = false,
+            Encoder = JavaScriptEncoder.Create(UnicodeRanges.All)
         };
 
         private static readonly JsonDocumentOptions DocumentOptions = new JsonDocumentOptions
