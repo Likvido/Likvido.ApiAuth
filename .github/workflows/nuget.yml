@@ -18,7 +18,7 @@ jobs:
       - name: Set tests path
         run: echo "TEST_RESULTS_PATH=${{ github.workspace }}/TestResults/" >> $GITHUB_ENV
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
@@ -41,7 +41,7 @@ jobs:
           VERSION_REGEX: <Version>(.*)<\/Version>
           NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
       - name: Extract version
-        uses: bhowell2/github-substring-action@v1.0.0
+        uses: bhowell2/github-substring-action@1.0.1
         id: common_version
         with:
           value: ${{steps.publish_nuget_common.outputs.VERSION}}
