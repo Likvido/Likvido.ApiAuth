@@ -5,18 +5,6 @@ updates:
     schedule:
       interval: daily
   - package-ecosystem: nuget
-    directory: /src/Likvido.ApiAuth.Client
-    schedule:
-      interval: daily
-  - package-ecosystem: nuget
-    directory: /src/Likvido.ApiAuth.Common
-    schedule:
-      interval: daily
-  - package-ecosystem: nuget
-    directory: /src/Likvido.ApiAuth.Server
-    schedule:
-      interval: daily
-  - package-ecosystem: nuget
-    directory: /src/Likvido.ApiAuth.Tests
+    directory: /
     schedule:
       interval: daily
