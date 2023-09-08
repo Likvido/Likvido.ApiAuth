@@ -18,7 +18,7 @@ jobs:
       - name: Set tests path
         run: echo "TEST_RESULTS_PATH=${{ github.workspace }}/TestResults/" >> $GITHUB_ENV
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
